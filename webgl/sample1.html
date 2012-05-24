@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>WEBGL sample 1</title>
+<style>
+body, html {
+  margin: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+#framerate {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(0,0,0,0.3);
+  padding: 1em;
+  color: white;
+}
+canvas{
+	width:100%;
+	height:100%;
+}
+</style>
+<script type="text/javascript" src="js/thirdparty/J3DIMath.js"></script>
+<script type="text/javascript" src="js/aldoreyes-webgl.js"></script>
+<script id="vshader" type="x-shader/x-vertex">
+	attribute vec4 a_Position;
+	uniform mat4 u_MVPMatrix;
+	void main(){
+		gl_Position = u_MVPMatrix * a_Position;
+	}
+</script>
+<script id="fshader" type="x-shader/x-fragment">
+	precision mediump float;
+	void main(){
+		gl_FragColor = vec4(0.6367,0.7695,0.2226,1.0);
+	}
+</script>
+<script type="text/javascript">
+
+var box;
+var angle = 0;
+function onTick(){
+	box.mMatrix.makeIdentity();
+	box.mMatrix.rotate(20, 1, 0, 0);
+	box.mMatrix.rotate(angle, 0, 1, 0);
+	angle+=.5;
+	if(angle > 360){
+		angle-=360;
+	}
+}
+
+function run(){
+	var engine = new Engine('main-canvas', 'vshader', 'fshader', ['a_Position']);
+	engine.objects.push((box = makeBox(engine.gl)));
+	engine.setOnTick(onTick);
+	engine.start();
+}
+</script>
+</head>
+<html>
+	<body onLoad="run()">
+		<canvas id="main-canvas">
+			Browser doesn't support &lt;canvas&gt; tag.
+		</canvas>
+		<div id="framerate"></div>
+	</body>
+	
+</html>
